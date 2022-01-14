@@ -1,0 +1,11 @@
+# name
+[Interface]
+PrivateKey = privkey
+Address = clientip
+DNS = 10.10.110.7, 10.10.110.10
+
+[Peer]
+PublicKey = <Place your public key here>
+AllowedIPs = 0.0.0.0/0
+Endpoint = <Place your server URL here>
+PersistentKeepalive = 15
