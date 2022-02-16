@@ -1,0 +1,24 @@
+#!/bin/bash
+# install requirements
+sudo yum update && sudo yum install curl -y
+sudo curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo
+sudo yum install epel-release -y
+sudo yum update && sudo yum install wireguard-dkms wireguard-tools -y
+
+# configure wg
+mkdir -p /etc/wireguard
+wg genkey | sudo tee /etc/wireguard/privatekey | wg pubkey | sudo tee /etc/wireguard/publickey
+PRIVKEY=`cat /etc/wireguard/privatekey`
+sudo cp wg_conf /etc/wireguard/wg0.conf
+sudo sed -i 's/PRIVKEY/${PRIVKEY}/g' /etc/wireguard/wg0.conf
+
+# run initial user creation
+sudo cp initial /etc/wireguard/
+sudo chmod +x /etc/wireguard/initial
+
+sudo cp new /etc/wireguard/
+sudo chmod +x /etc/wireguard/new
+
+sudo cp users.txt /etc/wireguard
+
+sudo source /etc/wireguard/inital

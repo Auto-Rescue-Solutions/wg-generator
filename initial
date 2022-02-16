@@ -3,13 +3,7 @@
 #
 # WireGuard autosetup
 #
-# This script will generate the requisite keys for a device.
-# It will automatically generate a .conf and append it to the network config
-# for the wg interface and restart the service, as well as generate a .conf for
-# the client & print a QR code.
-# This script assumes 1 wg interface and 1 /24 subnet but will auto-detect
-# both. Client configuration files are generated in the conf/ dir and QR codes
-# are saved in qr/.
+# Create users certs and configs from a list (users.txt)
 #
 # Requires: qrencode, wireguard, template client config
 #
@@ -27,8 +21,10 @@ DATE=`date +%D | sed -e "s/\//./g"`
 INTERFACE=`wg show interfaces`
 
 # Create array of users and generate keys in /certs
-readarray -t a < users.txt
+mapfile -t users < users.txt
 
+for PREFIX in "${users[@]}"
+do
 #####
 ##########
 ###############
@@ -75,6 +71,7 @@ echo =======
 ######
 ####
 ##
+done
 
 echo
 echo Reloading interface...
