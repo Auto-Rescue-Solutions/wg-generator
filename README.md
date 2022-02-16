@@ -2,18 +2,12 @@
 
 ### Summary 
 
-This script will generate the requisite keys for a device. It will automatically generate a .conf and append it to the network config for the wg interface and restart the service, as well as generate a .conf for the client & print a QR code.
+This script will install Wireguard on a server and create an initial interface configuration, then generate user certificates and configurations for each line in the `users.txt` file. It will automatically generate a .conf and append it to the network config for the wg interface and restart the service, as well as generate a .conf for the client & print a QR code.
 
-This script assumes 1 wg interface and 1 /24 subnet but will auto-detect both. Client configuration files are generated in the `conf/` dir and QR codes are saved in `qr/`.
-
-### Requirements
-
-`qrencode`, `wireguard`, the included `template` client config.
+Client configuration files are generated in the `conf/` dir and QR codes are saved in `qr/`.
 
 ### Instructions
 
-Modify the template with your server's public key and URL. 
+Clone repo and run `install`. This will automatically generate an installation and create initial users.
 
-Copy the contents of this repo into `/etc/wireguard`
-
-Run with `./new`
+Manually create new users with `/etc/wireguard/new`, passing the username as a parameter (e.g. `./new reid`). 

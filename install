@@ -3,7 +3,7 @@
 sudo yum update && sudo yum install curl -y
 sudo curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo
 sudo yum install epel-release -y
-sudo yum update && sudo yum install wireguard-dkms wireguard-tools -y
+sudo yum update && sudo yum install wireguard-dkms wireguard-tools qrencode -y
 
 # configure wg
 mkdir -p /etc/wireguard
