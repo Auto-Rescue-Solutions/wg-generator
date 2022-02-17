@@ -24,7 +24,7 @@ umask 077; wg genkey | tee /etc/wireguard/certs/root\_private | wg pubkey > \
 ROOTPUB=`cat /etc/wireguard/certs/root_public`
 sed -i "s/REPLACE/${ROOTPUB}/g" /etc/wireguard/wg0.conf
 
-sudo wg-quick up wg0
+# sudo wg-quick up wg0
 DATE=`date +%D | sed -e "s/\//./g"`
 INTERFACE=`wg show interfaces`
 
@@ -72,9 +72,9 @@ echo Replacing IP with $NEWIP_CLIENT
 sed -i "s|clientip|$NEWIP_CLIENT|g" /etc/wireguard/conf/${CLIENT}.${DATE}.conf
 qrencode -t ansiutf8 < /etc/wireguard/conf/${CLIENT}.${DATE}.conf > /etc/wireguard/qr/${CLIENT}.${DATE}.qr
 
-#printf '\n\n# ${CLIENT}\n[Peer]\nPublicKey = ${PUBKEY}\nAllowedIPs = ${NEWIP_SERVER}' >> /etc/wireguard/wg0.conf
-
 sudo cat <<EOF   >> /etc/wireguard/wg0.conf
+
+
 # ${CLIENT}
 [Peer]
 PublicKey = ${PUBKEY}
@@ -92,4 +92,4 @@ chmod 600 /etc/wireguard/wg0.conf
 echo
 echo Reloading interface...
 #wg-quick down wg0
-#wg-quick up wg0
+wg-quick up wg0
