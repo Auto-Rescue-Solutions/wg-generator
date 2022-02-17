@@ -26,8 +26,8 @@ mkdir -p qr
 DATE=`date +%D | sed -e "s/\//./g"`
 INTERFACE=`wg show interfaces`
 
-# Create array of users and generate keys in /certs
-readarray -t a < users.txt
+# Create user headlessly
+PREFIX=$1
 
 #####
 ##########

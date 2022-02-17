@@ -10,6 +10,9 @@ sudo yum update -y && sudo yum install wireguard-dkms wireguard-tools qrencode -
 sudo mkdir -p /etc/wireguard
 wg genkey | sudo tee /etc/wireguard/privatekey | wg pubkey | sudo tee /etc/wireguard/publickey
 PRIVKEY=`sudo cat /etc/wireguard/privatekey`
+PUBKEY=`sudo cat /etc/wireguard/publickey`
+SERVERIP=`curl ifconfig.me`
+
 sudo cp wg_conf /etc/wireguard/wg0.conf
 sudo sed -i "s|PRIVKEY|${PRIVKEY}|g" /etc/wireguard/wg0.conf
 
@@ -20,7 +23,10 @@ sudo chmod +x /etc/wireguard/initial
 sudo cp new /etc/wireguard/
 sudo chmod +x /etc/wireguard/new
 
+sudo cp template /etc/wireguard
 sudo cp users.txt /etc/wireguard
+sudo sed -i "s|pubkey|${PUBKEY}|g" /etc/wireguard/template
+sudo sed -i "s|serverip|${SERVERIP}|g" /etc/wireguard/template
 
 sudo cd /etc/wireguard
 sudo /bin/bash /etc/wireguard/initial

@@ -5,7 +5,7 @@ Address = clientip
 DNS = 10.10.110.7, 10.10.110.10
 
 [Peer]
-PublicKey = <Place your public key here>
+PublicKey = pubkey
 AllowedIPs = 0.0.0.0/0
-Endpoint = <Place your server URL here>
+Endpoint = serverip:41194
 PersistentKeepalive = 15

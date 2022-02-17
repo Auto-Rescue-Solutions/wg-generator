@@ -61,12 +61,13 @@ NEWIP_CLIENT=`tail -n 1 /etc/wireguard/${INTERFACE}.conf | awk '{print $3}' \
         | awk -F. -v OFS=. -v r=${IPVAR}/24 '{$4=r}1'`
 
 # Print new peer entry to interface config
+sudo echo "Appending ${CLIENT} IP ${NEWIP_SERVER} to ${INTERFACE}"
 printf "\n\n# ${CLIENT}\n[Peer]\nPublicKey = ${PUBKEY}\nAllowedIPs = \
 ${NEWIP_SERVER}" >> /etc/wireguard/${INTERFACE}.conf
 
 # Generate .conf for client
 echo Generating client configuration...
-cp template /etc/wireguard/conf/${CLIENT}.${DATE}.conf
+cp /etc/wireguard/template /etc/wireguard/conf/${CLIENT}.${DATE}.conf
 echo Replacing name with ${CLIENT}
 sed -i "s|name|$CLIENT|g" /etc/wireguard/conf/${CLIENT}.${DATE}.conf
 echo Replacing privkey with $PRIVKEY
@@ -80,7 +81,7 @@ echo =======
 ####
 ##
 done
-
+umask 077
 echo
 echo Reloading interface...
 wg-quick down ${INTERFACE}
