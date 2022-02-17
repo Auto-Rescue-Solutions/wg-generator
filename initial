@@ -46,7 +46,7 @@ echo Generating interface configuration...
 PRIVKEY=`cat /etc/wireguard/certs/${CLIENT}\_private`
 PUBKEY=`cat /etc/wireguard/certs/${CLIENT}\_public`
 # Find the IP of the last client
-LASTIP=`tail -n 1 /etc/wireguard/${INTERFACE}.conf | awk '{print $3}' | awk -F. '{print $4}' \
+LASTIP=`tail -n 1 /etc/wireguard/wg0.conf | awk '{print $3}' | awk -F. '{print $4}' \
         | awk -F'/' '{print $1}'`
 if [ "$LASTIP" -ge "256" ]; then
         echo You have run out of /24 addresses. Exiting.
@@ -55,15 +55,11 @@ fi
 # Incremented /32
 IPVAR=$((LASTIP+1))
 # New IP strings for configs
-NEWIP_SERVER=`tail -n 1 /etc/wireguard/${INTERFACE}.conf | awk '{print $3}' \
+NEWIP_SERVER=`tail -n 1 /etc/wireguard/wg0.conf | awk '{print $3}' \
         | awk -F. -v OFS=. -v r=${IPVAR}/32 '{$4=r}1'`
-NEWIP_CLIENT=`tail -n 1 /etc/wireguard/${INTERFACE}.conf | awk '{print $3}' \
+NEWIP_CLIENT=`tail -n 1 /etc/wireguard/wg0.conf | awk '{print $3}' \
         | awk -F. -v OFS=. -v r=${IPVAR}/24 '{$4=r}1'`
 
-# Print new peer entry to interface config
-sudo echo "Appending ${CLIENT} IP ${NEWIP_SERVER} to ${INTERFACE}"
-printf "\n\n# ${CLIENT}\n[Peer]\nPublicKey = ${PUBKEY}\nAllowedIPs = \
-${NEWIP_SERVER}" >> /etc/wireguard/${INTERFACE}.conf
 
 # Generate .conf for client
 echo Generating client configuration...
@@ -75,14 +71,25 @@ sed -i "s|privkey|$PRIVKEY|g" /etc/wireguard/conf/${CLIENT}.${DATE}.conf
 echo Replacing IP with $NEWIP_CLIENT
 sed -i "s|clientip|$NEWIP_CLIENT|g" /etc/wireguard/conf/${CLIENT}.${DATE}.conf
 qrencode -t ansiutf8 < /etc/wireguard/conf/${CLIENT}.${DATE}.conf > /etc/wireguard/qr/${CLIENT}.${DATE}.qr
+
+#printf '\n\n# ${CLIENT}\n[Peer]\nPublicKey = ${PUBKEY}\nAllowedIPs = ${NEWIP_SERVER}' >> /etc/wireguard/wg0.conf
+
+sudo cat <<EOF   >> /etc/wireguard/wg0.conf
+# ${CLIENT}
+[Peer]
+PublicKey = ${PUBKEY}
+AllowedIPs = ${NEWIP_SERVER}
+EOF
+
 echo ${CLIENT} complete
 echo =======
 ######
 ####
 ##
 done
-umask 077
+
+chmod 600 /etc/wireguard/wg0.conf
 echo
 echo Reloading interface...
-wg-quick down ${INTERFACE}
-wg-quick up ${INTERFACE}
+#wg-quick down wg0
+#wg-quick up wg0
