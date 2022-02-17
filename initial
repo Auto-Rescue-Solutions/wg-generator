@@ -22,9 +22,9 @@ mkdir -p /etc/wireguard/qr
 umask 077; wg genkey | tee /etc/wireguard/certs/root\_private | wg pubkey > \
         /etc/wireguard/certs/root\_public
 ROOTPUB=`cat /etc/wireguard/certs/root_public`
-sed -i "s/REPLACE/${ROOTPUB}/g" /etc/wireguard/wg0.conf
+sed -i "s|REPLACE|${ROOTPUB}|g" /etc/wireguard/wg0.conf
 
-# sudo wg-quick up wg0
+sudo wg-quick up wg0
 DATE=`date +%D | sed -e "s/\//./g"`
 INTERFACE=`wg show interfaces`
 
@@ -74,7 +74,6 @@ qrencode -t ansiutf8 < /etc/wireguard/conf/${CLIENT}.${DATE}.conf > /etc/wiregua
 
 sudo cat <<EOF   >> /etc/wireguard/wg0.conf
 
-
 # ${CLIENT}
 [Peer]
 PublicKey = ${PUBKEY}
@@ -91,5 +90,4 @@ done
 chmod 600 /etc/wireguard/wg0.conf
 echo
 echo Reloading interface...
-#wg-quick down wg0
-wg-quick up wg0
+wg syncconf wg0 <(wg-quick strip wg0)
