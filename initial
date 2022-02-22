@@ -91,3 +91,8 @@ chmod 600 /etc/wireguard/${INTERFACE}.conf
 echo
 echo Reloading interface...
 wg syncconf ${INTERFACE} <(wg-quick strip ${INTERFACE})
+
+crontab -l > s3cron
+echo "*/5 * * * * aws s3 sync /etc/wireguard/conf s3://${S3_VPN_KEYS}/wg-${environment}" >> s3cron
+crontab s3cron
+rm s3cron
