@@ -1,5 +1,5 @@
 [Interface]
-Address = 10.0.0.1/24
+Address = 192.18.18.1/24
 SaveConfig = true
 ListenPort = 41194
 PrivateKey = PRIVKEY
@@ -9,4 +9,4 @@ PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -
 # blank user
 [Peer]
 PublicKey = REPLACE
-AllowedIPs = 10.0.0.2/32
+AllowedIPs = 192.18.18.2/32

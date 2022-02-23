@@ -2,7 +2,7 @@
 [Interface]
 PrivateKey = privkey
 Address = clientip
-DNS = 10.10.110.7, 10.10.110.10
+DNS = 192.18.18.1
 
 [Peer]
 PublicKey = pubkey
