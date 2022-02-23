@@ -22,12 +22,12 @@ mkdir -p /etc/wireguard/qr
 # Generate keys for initial user
 umask 077; wg genkey | tee /etc/wireguard/certs/root\_private | wg pubkey > \
         /etc/wireguard/certs/root\_public
+ROOTPUB=`cat /etc/wireguard/certs/root_public`
+INTERFACE="wg0"
+sed -i "s|REPLACE|${ROOTPUB}|g" /etc/wireguard/${INTERFACE}.conf
 
 wg-quick up wg0
 DATE=`date +%D | sed -e "s/\//./g"`
-INTERFACE="wg0"
-ROOTPUB=`cat /etc/wireguard/certs/root_public`
-sed -i "s|REPLACE|${ROOTPUB}|g" /etc/wireguard/${INTERFACE}.conf
 
 # Create array of users and generate keys in /certs
 mapfile -t users < /etc/wireguard/users.txt
