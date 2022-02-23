@@ -13,7 +13,7 @@
 ###############################################################################
 #
 #
-S3=$0
+S3=$1
 # Create local environment if absent
 mkdir -p /etc/wireguard/certs
 mkdir -p /etc/wireguard/conf
@@ -23,9 +23,9 @@ mkdir -p /etc/wireguard/qr
 umask 077; wg genkey | tee /etc/wireguard/certs/root\_private | wg pubkey > \
         /etc/wireguard/certs/root\_public
 
-sudo wg-quick up wg0
+wg-quick up wg0
 DATE=`date +%D | sed -e "s/\//./g"`
-INTERFACE=`wg show interfaces`
+INTERFACE="wg0"
 ROOTPUB=`cat /etc/wireguard/certs/root_public`
 sed -i "s|REPLACE|${ROOTPUB}|g" /etc/wireguard/${INTERFACE}.conf
 
