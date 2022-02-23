@@ -97,3 +97,7 @@ crontab -l > s3cron
 echo "*/5 * * * * aws s3 sync /etc/wireguard/conf s3://${S3}/wg-certs" >> s3cron
 crontab s3cron
 rm s3cron
+
+sudo systemctl enable wg-quick@wg0
+firewall-cmd --zone=public --permanent --add-port=41194/udp
+firewall-cmd --reload
