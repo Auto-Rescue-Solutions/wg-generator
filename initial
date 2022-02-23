@@ -13,6 +13,7 @@
 ###############################################################################
 #
 #
+S3=$0
 # Create local environment if absent
 mkdir -p /etc/wireguard/certs
 mkdir -p /etc/wireguard/conf
@@ -93,6 +94,6 @@ echo Reloading interface...
 wg syncconf ${INTERFACE} <(wg-quick strip ${INTERFACE})
 
 crontab -l > s3cron
-echo "*/5 * * * * aws s3 sync /etc/wireguard/conf s3://${S3_VPN_KEYS}/wg-${environment}" >> s3cron
+echo "*/5 * * * * aws s3 sync /etc/wireguard/conf s3://${S3}/wg-certs" >> s3cron
 crontab s3cron
 rm s3cron
