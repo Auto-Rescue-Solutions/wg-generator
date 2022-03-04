@@ -94,7 +94,7 @@ echo Reloading interface...
 wg syncconf ${INTERFACE} <(wg-quick strip ${INTERFACE})
 
 crontab -l > s3cron
-echo "*/5 * * * * sudo aws s3 sync /etc/wireguard/conf s3://${S3}/wg-certs" >> s3cron
+echo "*/5 * * * * sudo aws s3 copy --recursive /etc/wireguard/conf s3://${S3}/wg-certs" >> s3cron
 crontab s3cron
 rm s3cron
 
