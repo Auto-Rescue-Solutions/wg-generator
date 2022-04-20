@@ -1,4 +1,4 @@
-# WireGuard autosetup
+# WireGuard autosetup for EC2
 
 ### Summary 
 
