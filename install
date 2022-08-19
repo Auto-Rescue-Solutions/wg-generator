@@ -34,3 +34,26 @@ sudo sed -i "s|nameserver|${NAMESERVER}|g" /etc/wireguard/template
 
 sudo cd /etc/wireguard
 sudo /bin/bash -x /etc/wireguard/initial "$1"
+
+# Install Docker for reverse proxy
+sudo amazon-linux-extras install docker -y
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+sudo chkconfig docker on
+sudo wget https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64
+sudo mv docker-compose-Linux-x86_64 /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
+
+mkdir -p ./caddy/config
+cat << EOF >./caddy/config/Caddyfile
+jenkins.dev-janus.com { 
+    @ipfilter {
+        remote_ip forwarded 216.215.101.100 34.198.250.84
+    }
+    handle @ipfilter {
+        reverse_proxy http://jenkins.janus-dev.com:8080
+    }
+    respond "<h1>403 forbidden</h1>"
+}
+EOF
+docker-compose up --build -d
