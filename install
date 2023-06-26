@@ -47,18 +47,17 @@ sudo chmod +x /usr/bin/docker-compose
 mkdir -p ./caddy/config
 ipaddr=`curl ifconfig.me`
 cat << EOF >./caddy/config/Caddyfile
-jenkins.dev-janus.com { 
+jenkins.dr-janus.com { 
     @ipfilter {
-        remote_ip forwarded 127.0.0.1 216.215.101.100 10.10.130.0/24 34.198.250.84 187.190.78.151 ${ipaddr}
+        remote_ip forwarded 127.0.0.1 216.215.101.100 10.10.130.0/24 187.190.78.151 ${ipaddr}
     }
     handle @ipfilter {
-        reverse_proxy http://jenkins.janus-dev.com:8080
+        reverse_proxy http://jenkins.janus-dr.com:8080
     }
     respond "<h1>403 forbidden</h1>"
 }
 EOF
 # 10.10.130.0/24 -- local VPN
 # 216.215.101.100 -- ARS VPN
-# 34.198.250.84 -- Revelry VPN
 # 187.190.78.151 -- ClickIT VPN
 docker-compose up --build -d
